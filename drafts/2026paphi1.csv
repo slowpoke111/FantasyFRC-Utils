@@ -1,0 +1,104 @@
+,,,,,,,,,,,,,,,,
+,Participant,Pick #1,Pick #2,Pick #3,,Available Teams,,,,Autodraft:,OPR,,,,,
+,Jack | 7045,6328,484,341,,122,157,190,,2539,224.69,,,,,
+,Colin | 5181,316,5000,5181,,316,321,341,,2377,145.65,,,,,
+,Ben | 5113,449,190,10979,,427,449,484,,1218,143.68,,,,,
+,,,,,,714,1218,2377,,122,133.45,,,,,
+,,,,,,2539,3637,4373,,3637,122.7,,,,,
+,,,,,,5000,5181,6328,,157,55.26,,,,,
+,,,,,,9015,10979,,,321,48.3,,,,,
+,,,,,,,,,,427,31.79,,,,,
+,,,,,,,,,,714,23.93,,,,,
+,,,,,,,,,,,,,,,,
+,,,,,,,,,,714,23.93,378.98,,,,
+,,,,,,,,,,4373,0,,,,,
+,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,"import requests
+
+TBA_KEY = ""WeJ0pjh3DtGPmWKwCPAstqVEcM85bQtMqDk0cbJnKCJsvwHwZKd38htFQL1nCoVp""
+YEAR = 2026
+
+teams = [
+    122, 157, 190,
+    316, 321, 341,
+    427, 449, 484,
+    714, 1218, 2377,
+    2539, 3637, 4373,
+    5000, 5181, 6328,
+    10979
+]
+
+headers = {
+    ""X-TBA-Auth-Key"": TBA_KEY
+}
+
+
+def get(url):
+    r = requests.get(url, headers=headers)
+    r.raise_for_status()
+    return r.json()
+
+
+results = []
+
+for team in teams:
+    print(f""Processing {team}"")
+
+    teamKey = f""frc{team}""
+    highestOpr = None
+    highestEvent = None
+
+    try:
+        events = get(
+            f""https://www.thebluealliance.com/api/v3/team/{teamKey}/events/{YEAR}""
+        )
+
+        for event in events:
+            eventKey = event[""key""]
+
+            try:
+                oprData = get(
+                    f""https://www.thebluealliance.com/api/v3/event/{eventKey}/oprs""
+                )
+
+                oprs = oprData.get(""oprs"", {})
+
+                if teamKey in oprs:
+                    opr = oprs[teamKey]
+
+                    if highestOpr is None or opr > highestOpr:
+                        highestOpr = opr
+                        highestEvent = eventKey
+
+            except Exception:
+                continue
+
+    except Exception as e:
+        print(f""Failed {team}: {e}"")
+
+    if highestOpr is None:
+        highestOpr = 0
+
+    results.append((team, highestOpr, highestEvent))
+
+
+# Highest OPR first
+results.sort(key=lambda x: x[1], reverse=True)
+
+import pyperclip
+
+output = ""Team\tOPR""
+
+for team, opr, event in results:
+    output += f""{team}\t{opr:.2f}\n""
+
+pyperclip.copy(output)
+
+print(""Copied to clipboard!"")"
