@@ -76,7 +76,7 @@ results.sort(key=lambda x: x[1], reverse=True)
 
 import pyperclip
 
-output = "Team\tOPR"
+output = "Team\tOPR\n"
 
 for team, opr, event in results:
     output += f"{team}\t{opr:.2f}\n"
