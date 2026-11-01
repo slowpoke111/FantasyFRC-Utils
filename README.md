@@ -17,3 +17,13 @@ Scores a draft using the TBA API.
 ## `autodraft.py`
 1. Set event year and team list on lines 8 to 18
 2. Run the script. A list of teams by OPR will be copied to your clipboard for the autodraft list. 
+
+## Requirements
+
+- Python 3
+- A [The Blue Alliance API key](https://www.thebluealliance.com/apidocs)
+- Dependencies listed in `requirements.txt`
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
