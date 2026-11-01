@@ -38,18 +38,13 @@ for team in teams:
     highestEvent = None
 
     try:
-        events = get(
-            f"https://www.thebluealliance.com/api/v3/team/{teamKey}/events/{YEAR}"
-        )
+        events = get(f"https://www.thebluealliance.com/api/v3/team/{teamKey}/events/{YEAR}")
 
         for event in events:
             eventKey = event["key"]
 
             try:
-                oprData = get(
-                    f"https://www.thebluealliance.com/api/v3/event/{eventKey}/oprs"
-                )
-
+                oprData = get(f"https://www.thebluealliance.com/api/v3/event/{eventKey}/oprs")
                 oprs = oprData.get("oprs", {})
 
                 if teamKey in oprs:
@@ -71,12 +66,11 @@ for team in teams:
     results.append((team, highestOpr, highestEvent))
 
 
-# Highest OPR first
 results.sort(key=lambda x: x[1], reverse=True)
 
 import pyperclip
 
-output = "Team\tOPR"
+output = "Team\tOPR\n"
 
 for team, opr, event in results:
     output += f"{team}\t{opr:.2f}\n"

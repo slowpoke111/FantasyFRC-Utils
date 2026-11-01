@@ -7,7 +7,7 @@ import os
 dotenv.load_dotenv()
 
 TBA_API_KEY = os.getenv("TBA_API_KEY", "")
-EVENT_CODE = "2026njrr"
+EVENT_CODE = "2026parr"
 
 INPUT_FILE = f"./drafts/{EVENT_CODE}.csv"
 OUTPUT_FILE = f"./scores/{EVENT_CODE}_output.csv"
@@ -16,7 +16,7 @@ PTS_QUAL_WIN = 3
 PTS_QUAL_TIE = 1
 PTS_PLAYOFF_WIN = 5
 
-# SLFF table: {alliance_rank: {position: points, ...}, ...}. No points for backup teams
+# SLFF table: {alliance_rank: {position: points, ...}, ...}. no points for backup teams
 SLFF = {
     1: {"Captain": 16, "1st Pick": 16, "2nd Pick": 1},
     2: {"Captain": 15, "1st Pick": 15, "2nd Pick": 2},
@@ -82,7 +82,7 @@ def parse_input(path):
                 pass
     pick_cols.sort(key=lambda x: x[1])
 
-    # read contiguous partcipants until firts empty row
+    # read contiguous partcipants until firts empty row 
     participants = []
     started = False
     for row in rows[header_row_idx + 1 :]:
@@ -282,16 +282,12 @@ def write_output(path, participants):
     pick_headers = [f"Pick #{i + 1}" for i in range(num_picks)]
     point_headers = ["Points per Pick"] + [""] * (num_picks - 1)
 
-    header = (
-        ["", "Participant"] + pick_headers + [""] + point_headers + ["", "", "Total"]
-    )
+    header = ["", "Participant"] + pick_headers + [""] + point_headers + ["", "", "Total"]
 
     rows = [header]
     for p in participants:
         picks_padded = p["picks"] + [""] * (num_picks - len(p["picks"]))
-        points_padded = p["points_per_pick"] + [""] * (
-            num_picks - len(p["points_per_pick"])
-        )
+        points_padded = p["points_per_pick"] + [""] * (num_picks - len(p["points_per_pick"]))
         row = (
             ["", p["name"]]
             + [str(x) for x in picks_padded]
