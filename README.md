@@ -1,6 +1,6 @@
 # FantasyFRC-Utils
 
-## Config
+## Setup
 1. Run `pip install -r requirements.txt` to install dependencies
 2. Create a `.env` file and fill in your [TBA API key](https://www.thebluealliance.com/apidocs). Follow the template in `.env.example`.
 
